@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import org.springframework.lang.NonNull;
 
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -25,7 +26,7 @@ public class StorageInitializer implements BeanPostProcessor {
     private Resource initialData;
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
         // Initialization only if the bean is a Map and its name matches one of the storages
         if (!(bean instanceof Map)) {
             return bean;
