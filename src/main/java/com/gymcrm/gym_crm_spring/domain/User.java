@@ -1,10 +1,13 @@
 package com.gymcrm.gym_crm_spring.domain;
 
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-@Data
+@Getter
+@Setter
 @SuperBuilder
+@ToString
+@EqualsAndHashCode
 public abstract class User {
     private String id;
     private String firstName;

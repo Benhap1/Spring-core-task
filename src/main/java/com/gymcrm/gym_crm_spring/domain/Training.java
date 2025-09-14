@@ -1,12 +1,14 @@
 package com.gymcrm.gym_crm_spring.domain;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @Builder
+@ToString
+@EqualsAndHashCode
 public class Training {
     private String id;
     private String trainerId;
@@ -15,17 +17,4 @@ public class Training {
     private String trainingType;
     private LocalDate trainingDate;
     private int trainingDurationMinutes;
-
-    @Override
-    public String toString() {
-        return "Training{" +
-                "id='" + id + '\'' +
-                ", trainerId='" + trainerId + '\'' +
-                ", traineeId='" + traineeId + '\'' +
-                ", trainingName='" + trainingName + '\'' +
-                ", trainingType='" + trainingType + '\'' +
-                ", trainingDate=" + trainingDate +
-                ", trainingDurationMinutes=" + trainingDurationMinutes +
-                '}';
-    }
 }
