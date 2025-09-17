@@ -34,7 +34,7 @@ class TrainingDaoTest {
 
         assertNotNull(training.getId(), "ID should be generated if null");
         assertTrue(storage.containsKey(training.getId()));
-        assertEquals("Morning Yoga", ((Training) storage.get(training.getId())).getTrainingName());
+        assertEquals("Morning Yoga", storage.get(training.getId()).getTrainingName());
     }
 
     @Test
@@ -48,7 +48,7 @@ class TrainingDaoTest {
         dao.save(training);
 
         assertEquals("tr1", training.getId(), "Explicit ID should not be overridden");
-        assertEquals("Cardio", ((Training) storage.get("tr1")).getTrainingName());
+        assertEquals("Cardio", storage.get("tr1").getTrainingName());
     }
 
     @Test
