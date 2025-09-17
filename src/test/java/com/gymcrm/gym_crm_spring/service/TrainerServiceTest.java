@@ -37,7 +37,7 @@ class TrainerServiceTest {
         Trainer result = trainerService.createTrainer(trainer, Collections.emptyList());
 
         assertNotNull(result.getId());
-        assertEquals("John.Smith", result.getUsername());
+        assertEquals("john.smith", result.getUsername());
         assertNotNull(result.getPassword());
         assertTrue(result.isActive());
 

@@ -3,17 +3,16 @@ package com.gymcrm.gym_crm_spring.dao;
 import com.gymcrm.gym_crm_spring.domain.Trainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Repository
 public class TrainerDao {
     private static final Logger log = LoggerFactory.getLogger(TrainerDao.class);
-    private final Map<String, Object> trainerStorage;
+    private final Map<String, Trainer> trainerStorage;
 
-    public TrainerDao(Map<String, Object> trainerStorage) {
+    public TrainerDao(@Qualifier("trainerStorage") Map<String, Trainer> trainerStorage) {
         this.trainerStorage = trainerStorage;
         log.debug("TrainerDao initialized with storage: {}", trainerStorage);
     }
@@ -24,10 +23,10 @@ public class TrainerDao {
     }
 
     public Optional<Trainer> findById(String id) {
-        return Optional.ofNullable((Trainer) trainerStorage.get(id));
+        return Optional.ofNullable(trainerStorage.get(id));
     }
 
     public List<Trainer> findAll() {
-        return trainerStorage.values().stream().map(o -> (Trainer) o).collect(Collectors.toList());
+        return new ArrayList<>(trainerStorage.values());
     }
 }

@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TrainingDaoTest {
 
     private TrainingDao dao;
-    private Map<String, Object> storage;
+    private Map<String, Training> storage;
 
     @BeforeEach
     void setUp() {

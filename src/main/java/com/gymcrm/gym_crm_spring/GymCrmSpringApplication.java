@@ -1,22 +1,19 @@
 package com.gymcrm.gym_crm_spring;
 
+import com.gymcrm.gym_crm_spring.config.AppConfig;
 import com.gymcrm.gym_crm_spring.domain.Trainee;
 import com.gymcrm.gym_crm_spring.domain.Trainer;
 import com.gymcrm.gym_crm_spring.domain.Training;
 import com.gymcrm.gym_crm_spring.facade.GymFacade;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.time.LocalDate;
 
-@SpringBootApplication
 public class GymCrmSpringApplication {
 
     public static void main(String[] args) {
-
-        ApplicationContext context = SpringApplication.run(GymCrmSpringApplication.class, args);
-
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         GymFacade facade = context.getBean(GymFacade.class);
 
         Trainer trainer = Trainer.builder()
@@ -25,7 +22,7 @@ public class GymCrmSpringApplication {
                 .specialization("Yoga")
                 .build();
         trainer = facade.registerTrainer(trainer);
-        System.out.println("Создан тренер: " + trainer);
+        System.out.println("New Trainer: " + trainer);
 
         Trainee trainee = Trainee.builder()
                 .firstName("Alice")
@@ -33,7 +30,7 @@ public class GymCrmSpringApplication {
                 .dateOfBirth(LocalDate.of(1995, 5, 10))
                 .build();
         trainee = facade.registerTrainee(trainee);
-        System.out.println("Создан ученик: " + trainee);
+        System.out.println("New trainee: " + trainee);
 
         Training training = Training.builder()
                 .trainerId(trainer.getId())
@@ -44,10 +41,10 @@ public class GymCrmSpringApplication {
                 .build();
 
         training = facade.scheduleTraining(training);
-        System.out.println("Создана тренировка: " + training);
+        System.out.println("New training: " + training);
 
-        System.out.println("Все тренеры: " + facade.listTrainers());
-        System.out.println("Все ученики: " + facade.listTrainees());
-        System.out.println("Все тренировки: " + facade.listTrainings());
+        System.out.println("All trainers: " + facade.listTrainers());
+        System.out.println("All trainees: " + facade.listTrainees());
+        System.out.println("All trainings: " + facade.listTrainings());
     }
 }

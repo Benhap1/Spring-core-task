@@ -3,18 +3,17 @@ package com.gymcrm.gym_crm_spring.dao;
 import com.gymcrm.gym_crm_spring.domain.Training;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-
 import java.util.*;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Repository
 public class TrainingDao {
     private static final Logger log = LoggerFactory.getLogger(TrainingDao.class);
-    private final Map<String, Object> trainingStorage;
+    private final Map<String, Training> trainingStorage;
 
-    public TrainingDao(Map<String, Object> trainingStorage) {
+    public TrainingDao(@Qualifier("trainingStorage") Map<String, Training> trainingStorage) {
         this.trainingStorage = trainingStorage;
         log.debug("TrainingDao initialized with storage: {}", trainingStorage);
     }
@@ -28,14 +27,16 @@ public class TrainingDao {
     }
 
     public Optional<Training> findById(String id) {
-        return Optional.ofNullable((Training) trainingStorage.get(id));
+        return Optional.ofNullable(trainingStorage.get(id));
     }
 
     public List<Training> findAll() {
-        return trainingStorage.values().stream().map(o -> (Training) o).collect(Collectors.toList());
+        return new ArrayList<>(trainingStorage.values());
     }
 
     public List<Training> findByTrainerId(String trainerId) {
-        return findAll().stream().filter(t -> trainerId.equals(t.getTrainerId())).collect(Collectors.toList());
+        return findAll().stream()
+                .filter(t -> trainerId.equals(t.getTrainerId()))
+                .toList();
     }
 }

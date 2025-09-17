@@ -10,7 +10,7 @@ class UserUtilsTest {
     @Test
     void generateUsername_unique() {
         String username = UserUtils.generateUsername("John", "Smith", List.of());
-        assertEquals("John.Smith", username);
+        assertEquals("john.smith", username);
     }
 
     @Test
@@ -19,8 +19,8 @@ class UserUtilsTest {
 
         String username = UserUtils.generateUsername("John", "Smith", List.of(existing));
 
-        assertTrue(username.startsWith("John.Smith"));
-        assertNotEquals("John.Smith", username);
+        assertTrue(username.startsWith("john.smith"));
+        assertNotEquals("john.smith", username);
     }
 
     @Test

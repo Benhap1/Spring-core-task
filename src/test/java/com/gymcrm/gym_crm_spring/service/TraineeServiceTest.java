@@ -37,7 +37,7 @@ class TraineeServiceTest {
         Trainee result = traineeService.createTrainee(trainee, Collections.emptyList());
 
         assertNotNull(result.getId());
-        assertEquals("Alice.Brown", result.getUsername());
+        assertEquals("alice.brown", result.getUsername());
         assertNotNull(result.getPassword());
         assertTrue(result.isActive());
 
