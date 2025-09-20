@@ -3,65 +3,76 @@ package com.gymcrm.gym_crm_spring.domain;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DomainTest {
 
+    private static final UUID TRAINER_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
+    private static final UUID TRAINEE_ID = UUID.fromString("22222222-2222-2222-2222-222222222222");
+    private static final UUID TRAINING_ID = UUID.fromString("33333333-3333-3333-3333-333333333333");
+
     @Test
-    void trainerBuilder_setsAllFieldsCorrectly() {
+    void trainer_builderAndGetters() {
         Trainer trainer = Trainer.builder()
-                .id("t1")
+                .id(TRAINER_ID)
                 .firstName("John")
                 .lastName("Smith")
                 .specialization("Yoga")
+                .username("john.smith")
+                .password("pass123")
                 .active(true)
                 .build();
 
-        assertEquals("t1", trainer.getId());
+        assertEquals(TRAINER_ID, trainer.getId());
         assertEquals("John", trainer.getFirstName());
         assertEquals("Smith", trainer.getLastName());
         assertEquals("Yoga", trainer.getSpecialization());
         assertTrue(trainer.isActive());
-        assertTrue(trainer.toString().contains("Yoga"));
     }
 
     @Test
-    void traineeBuilder_setsAllFieldsCorrectly() {
+    void trainee_builderAndGetters() {
+        LocalDate dob = LocalDate.of(1990, 5, 20);
         Trainee trainee = Trainee.builder()
-                .id("u1")
-                .firstName("Alice")
-                .lastName("Brown")
-                .dateOfBirth(LocalDate.of(1990, 1, 1))
-                .active(false)
+                .id(TRAINEE_ID)
+                .firstName("Anna")
+                .lastName("Lee")
+                .dateOfBirth(dob)
+                .address("123 Street")
+                .username("anna.lee")
+                .password("secret")
+                .active(true)
                 .build();
 
-        assertEquals("u1", trainee.getId());
-        assertEquals("Alice", trainee.getFirstName());
-        assertEquals("Brown", trainee.getLastName());
-        assertEquals(LocalDate.of(1990, 1, 1), trainee.getDateOfBirth());
-        assertFalse(trainee.isActive());
-        assertTrue(trainee.toString().contains("Alice"));
+        assertEquals(TRAINEE_ID, trainee.getId());
+        assertEquals("Anna", trainee.getFirstName());
+        assertEquals("Lee", trainee.getLastName());
+        assertEquals(dob, trainee.getDateOfBirth());
+        assertEquals("123 Street", trainee.getAddress());
+        assertTrue(trainee.isActive());
     }
 
     @Test
-    void trainingBuilder_setsAllFieldsCorrectly() {
+    void training_builderAndGetters() {
+        LocalDate date = LocalDate.now();
         Training training = Training.builder()
-                .id("tr1")
-                .trainerId("t1")
-                .traineeId("u1")
-                .trainingName("Cardio")
-                .trainingType("Fitness")
-                .trainingDate(LocalDate.now())
+                .id(TRAINING_ID)
+                .trainerId(TRAINER_ID)
+                .traineeId(TRAINEE_ID)
+                .trainingName("Morning Yoga")
+                .trainingType("Yoga")
+                .trainingDate(date)
                 .trainingDurationMinutes(60)
                 .build();
 
-        assertEquals("tr1", training.getId());
-        assertEquals("t1", training.getTrainerId());
-        assertEquals("u1", training.getTraineeId());
-        assertEquals("Cardio", training.getTrainingName());
-        assertEquals("Fitness", training.getTrainingType());
+        assertEquals(TRAINING_ID, training.getId());
+        assertEquals(TRAINER_ID, training.getTrainerId());
+        assertEquals(TRAINEE_ID, training.getTraineeId());
+        assertEquals("Morning Yoga", training.getTrainingName());
+        assertEquals("Yoga", training.getTrainingType());
+        assertEquals(date, training.getTrainingDate());
         assertEquals(60, training.getTrainingDurationMinutes());
-        assertTrue(training.toString().contains("Cardio"));
     }
 }

@@ -4,6 +4,7 @@ import com.gymcrm.gym_crm_spring.dao.TraineeDao;
 import com.gymcrm.gym_crm_spring.domain.Trainee;
 import com.gymcrm.gym_crm_spring.domain.User;
 import com.gymcrm.gym_crm_spring.utils.UserUtils;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,26 +14,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class TraineeService {
     private static final Logger log = LoggerFactory.getLogger(TraineeService.class);
-
-    private TraineeDao traineeDao;
-
-    public TraineeService() {
-        log.debug("TraineeService created");
-    }
-
-    @Autowired
-    public void setTraineeDao(TraineeDao traineeDao) {
-        this.traineeDao = traineeDao;
-        log.debug("TraineeDao injected into TraineeService");
-    }
+    private final TraineeDao traineeDao;
 
     public Trainee createTrainee(Trainee t, List<? extends User> existingUsersForCollision) {
         log.info("Creating trainee: {} {}", t.getFirstName(), t.getLastName());
 
         Trainee trainee = Trainee.builder()
-                .id(UUID.randomUUID().toString())
+                .id(UUID.randomUUID())
                 .firstName(t.getFirstName())
                 .lastName(t.getLastName())
                 .dateOfBirth(t.getDateOfBirth())
@@ -47,7 +38,7 @@ public class TraineeService {
         return trainee;
     }
 
-    public Optional<Trainee> findById(String id) {
+    public Optional<Trainee> findById(UUID id) {
         return traineeDao.findById(id);
     }
 
@@ -61,8 +52,9 @@ public class TraineeService {
         return t;
     }
 
-    public void delete(String id) {
+    public void delete(UUID id) {
         traineeDao.delete(id);
         log.info("Deleted trainee id={}", id);
     }
 }
+

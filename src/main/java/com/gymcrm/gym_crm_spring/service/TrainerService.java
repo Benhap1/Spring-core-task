@@ -4,6 +4,7 @@ import com.gymcrm.gym_crm_spring.dao.TrainerDao;
 import com.gymcrm.gym_crm_spring.domain.Trainer;
 import com.gymcrm.gym_crm_spring.domain.User;
 import com.gymcrm.gym_crm_spring.utils.UserUtils;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,30 +14,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class TrainerService {
     private static final Logger log = LoggerFactory.getLogger(TrainerService.class);
-
-    private TrainerDao trainerDao;
-
-    public TrainerService() {
-        log.debug("TrainerService created");
-    }
-
-    @Autowired
-    public void setTrainerDao(TrainerDao trainerDao) {
-        this.trainerDao = trainerDao;
-        log.debug("TrainerDao injected into TrainerService");
-    }
+    private final TrainerDao trainerDao;
 
     public Trainer createTrainer(Trainer t, List<? extends User> existingUsersForCollision) {
         log.info("Creating trainer: {} {}", t.getFirstName(), t.getLastName());
 
-        String id = UUID.randomUUID().toString();
+        UUID id = UUID.randomUUID(); // ✅ теперь UUID, а не String
         String username = UserUtils.generateUsername(t.getFirstName(), t.getLastName(), existingUsersForCollision);
         String password = UserUtils.generatePassword();
 
         Trainer trainer = Trainer.builder()
-                .id(id)
+                .id(id)  // ✅ UUID напрямую
                 .firstName(t.getFirstName())
                 .lastName(t.getLastName())
                 .specialization(t.getSpecialization())
@@ -50,7 +41,7 @@ public class TrainerService {
         return trainer;
     }
 
-    public Optional<Trainer> findById(String id) {
+    public Optional<Trainer> findById(UUID id) {  // ✅ параметр тоже UUID
         return trainerDao.findById(id);
     }
 

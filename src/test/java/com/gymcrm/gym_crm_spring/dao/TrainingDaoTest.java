@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TrainingDaoTest {
 
     private TrainingDao dao;
-    private Map<String, Training> storage;
+    private Map<UUID, Training> storage;
 
     @BeforeEach
     void setUp() {
@@ -23,8 +23,8 @@ class TrainingDaoTest {
     @Test
     void save_assignsIdIfNull_andStoresTraining() {
         Training training = Training.builder()
-                .trainerId("t1")
-                .traineeId("u1")
+                .trainerId(UUID.randomUUID())
+                .traineeId(UUID.randomUUID())
                 .trainingName("Morning Yoga")
                 .trainingDate(LocalDate.now())
                 .trainingDurationMinutes(45)
@@ -39,24 +39,26 @@ class TrainingDaoTest {
 
     @Test
     void save_preservesProvidedId() {
+        UUID id = UUID.randomUUID();
         Training training = Training.builder()
-                .id("tr1")
-                .trainerId("t1")
+                .id(id)
+                .trainerId(UUID.randomUUID())
                 .trainingName("Cardio")
                 .build();
 
         dao.save(training);
 
-        assertEquals("tr1", training.getId(), "Explicit ID should not be overridden");
-        assertEquals("Cardio", storage.get("tr1").getTrainingName());
+        assertEquals(id, training.getId(), "Explicit ID should not be overridden");
+        assertEquals("Cardio", storage.get(id).getTrainingName());
     }
 
     @Test
     void findById_returnsTrainingIfExists() {
-        Training training = Training.builder().id("tr2").trainingName("Test").build();
-        storage.put("tr2", training);
+        UUID id = UUID.randomUUID();
+        Training training = Training.builder().id(id).trainingName("Test").build();
+        storage.put(id, training);
 
-        Optional<Training> result = dao.findById("tr2");
+        Optional<Training> result = dao.findById(id);
 
         assertTrue(result.isPresent());
         assertEquals("Test", result.get().getTrainingName());
@@ -64,15 +66,17 @@ class TrainingDaoTest {
 
     @Test
     void findById_returnsEmptyIfNotFound() {
-        Optional<Training> result = dao.findById("missing");
+        Optional<Training> result = dao.findById(UUID.randomUUID());
 
         assertTrue(result.isEmpty());
     }
 
     @Test
     void findAll_returnsAllTrainings() {
-        storage.put("1", Training.builder().id("1").trainingName("Yoga").build());
-        storage.put("2", Training.builder().id("2").trainingName("Cardio").build());
+        Training t1 = Training.builder().id(UUID.randomUUID()).trainingName("Yoga").build();
+        Training t2 = Training.builder().id(UUID.randomUUID()).trainingName("Cardio").build();
+        storage.put(t1.getId(), t1);
+        storage.put(t2.getId(), t2);
 
         List<Training> all = dao.findAll();
 
@@ -82,15 +86,18 @@ class TrainingDaoTest {
 
     @Test
     void findByTrainerId_returnsOnlyMatching() {
-        Training t1 = Training.builder().id("1").trainerId("A").trainingName("Yoga").build();
-        Training t2 = Training.builder().id("2").trainerId("B").trainingName("Cardio").build();
-        Training t3 = Training.builder().id("3").trainerId("A").trainingName("Strength").build();
+        UUID trainerA = UUID.randomUUID();
+        UUID trainerB = UUID.randomUUID();
+
+        Training t1 = Training.builder().id(UUID.randomUUID()).trainerId(trainerA).trainingName("Yoga").build();
+        Training t2 = Training.builder().id(UUID.randomUUID()).trainerId(trainerB).trainingName("Cardio").build();
+        Training t3 = Training.builder().id(UUID.randomUUID()).trainerId(trainerA).trainingName("Strength").build();
 
         storage.put(t1.getId(), t1);
         storage.put(t2.getId(), t2);
         storage.put(t3.getId(), t3);
 
-        List<Training> byTrainer = dao.findByTrainerId("A");
+        List<Training> byTrainer = dao.findByTrainerId(trainerA);
 
         assertEquals(2, byTrainer.size());
         assertTrue(byTrainer.stream().anyMatch(t -> "Yoga".equals(t.getTrainingName())));

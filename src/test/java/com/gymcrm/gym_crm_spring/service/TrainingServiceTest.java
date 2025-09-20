@@ -9,6 +9,7 @@ import org.mockito.ArgumentCaptor;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -28,9 +29,12 @@ class TrainingServiceTest {
 
     @Test
     void createTraining_savesTraining() {
+        UUID trainerId = UUID.randomUUID();
+        UUID traineeId = UUID.randomUUID();
+
         Training training = Training.builder()
-                .trainerId("t1")
-                .traineeId("u1")
+                .trainerId(trainerId)
+                .traineeId(traineeId)
                 .trainingName("Morning Yoga")
                 .trainingType("Yoga")
                 .trainingDate(LocalDate.now())
@@ -42,20 +46,20 @@ class TrainingServiceTest {
         assertEquals("Morning Yoga", result.getTrainingName());
         assertNotNull(result.getId());
 
-        // Checking via ArgumentCaptor
+        // Проверка через ArgumentCaptor
         ArgumentCaptor<Training> captor = ArgumentCaptor.forClass(Training.class);
         verify(trainingDao).save(captor.capture());
 
         Training saved = captor.getValue();
         assertEquals("Morning Yoga", saved.getTrainingName());
-        assertEquals("t1", saved.getTrainerId());
-        assertEquals("u1", saved.getTraineeId());
+        assertEquals(trainerId, saved.getTrainerId());
+        assertEquals(traineeId, saved.getTraineeId());
     }
 
     @Test
     void listAll_returnsTrainings() {
-        Training tr1 = Training.builder().id("1").trainingName("A").build();
-        Training tr2 = Training.builder().id("2").trainingName("B").build();
+        Training tr1 = Training.builder().id(UUID.randomUUID()).trainingName("A").build();
+        Training tr2 = Training.builder().id(UUID.randomUUID()).trainingName("B").build();
 
         when(trainingDao.findAll()).thenReturn(Arrays.asList(tr1, tr2));
 

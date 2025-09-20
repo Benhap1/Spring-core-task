@@ -7,11 +7,13 @@ import com.gymcrm.gym_crm_spring.domain.User;
 import com.gymcrm.gym_crm_spring.service.TraineeService;
 import com.gymcrm.gym_crm_spring.service.TrainerService;
 import com.gymcrm.gym_crm_spring.service.TrainingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The Facade encapsulates the work of the services.
@@ -20,17 +22,11 @@ import java.util.List;
  */
 
 @Component
+@RequiredArgsConstructor
 public class GymFacade {
     private final TraineeService traineeService;
     private final TrainerService trainerService;
     private final TrainingService trainingService;
-
-    @Autowired
-    public GymFacade(TraineeService traineeService, TrainerService trainerService, TrainingService trainingService) {
-        this.traineeService = traineeService;
-        this.trainerService = trainerService;
-        this.trainingService = trainingService;
-    }
 
     public Trainer registerTrainer(Trainer trainer) {
         List<User> all = new ArrayList<>();
@@ -54,7 +50,7 @@ public class GymFacade {
         return traineeService.update(trainee);
     }
 
-    public void deleteTrainee(String traineeId) {
+    public void deleteTrainee(UUID traineeId) {
         traineeService.delete(traineeId);
     }
 

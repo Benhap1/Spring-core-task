@@ -3,6 +3,7 @@ package com.gymcrm.gym_crm_spring.domain;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -10,9 +11,9 @@ import java.time.LocalDate;
 @ToString
 @EqualsAndHashCode
 public class Training {
-    private String id;
-    private String trainerId;
-    private String traineeId;
+    private UUID id;
+    private UUID trainerId;
+    private UUID traineeId;
     private String trainingName;
     private String trainingType;
     private LocalDate trainingDate;

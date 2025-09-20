@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -20,8 +21,7 @@ class TraineeServiceTest {
     @BeforeEach
     void setUp() {
         traineeDao = mock(TraineeDao.class);
-        traineeService = new TraineeService();
-        traineeService.setTraineeDao(traineeDao);
+        traineeService = new TraineeService(traineeDao); // ✅ передаем DAO через конструктор
 
         doAnswer(invocation -> null).when(traineeDao).save(any(Trainee.class));
     }
@@ -46,10 +46,11 @@ class TraineeServiceTest {
 
     @Test
     void findById_returnsTrainee() {
-        Trainee trainee = Trainee.builder().id("456").firstName("Bob").lastName("Miller").build();
-        when(traineeDao.findById("456")).thenReturn(Optional.of(trainee));
+        UUID id = UUID.randomUUID();
+        Trainee trainee = Trainee.builder().id(id).firstName("Bob").lastName("Miller").build();
+        when(traineeDao.findById(id)).thenReturn(Optional.of(trainee));
 
-        Optional<Trainee> result = traineeService.findById("456");
+        Optional<Trainee> result = traineeService.findById(id);
 
         assertTrue(result.isPresent());
         assertEquals("Bob", result.get().getFirstName());
@@ -57,8 +58,9 @@ class TraineeServiceTest {
 
     @Test
     void updateTrainee_callsDaoSave() {
-        Trainee trainee = Trainee.builder().id("123").firstName("Alice").lastName("Brown").build();
-        when(traineeDao.findById("123")).thenReturn(Optional.of(trainee));
+        UUID id = UUID.randomUUID();
+        Trainee trainee = Trainee.builder().id(id).firstName("Alice").lastName("Brown").build();
+        when(traineeDao.findById(id)).thenReturn(Optional.of(trainee));
 
         Trainee updated = traineeService.update(trainee);
 
@@ -68,8 +70,10 @@ class TraineeServiceTest {
 
     @Test
     void deleteTrainee_callsDaoDelete() {
-        traineeService.delete("123");
-        verify(traineeDao).delete("123");
-    }
+        UUID id = UUID.randomUUID();
 
+        traineeService.delete(id);
+
+        verify(traineeDao).delete(id);
+    }
 }

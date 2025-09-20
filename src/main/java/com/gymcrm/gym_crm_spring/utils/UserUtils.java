@@ -1,6 +1,7 @@
 package com.gymcrm.gym_crm_spring.utils;
 
 import com.gymcrm.gym_crm_spring.domain.User;
+import lombok.experimental.UtilityClass;
 
 import java.security.SecureRandom;
 import java.util.HashSet;
@@ -12,13 +13,12 @@ import java.util.Set;
  * - username generation
  * - password generation
  */
-public final class UserUtils {
-    private static final String PASSWORD_CHARS =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private static final SecureRandom RANDOM = new SecureRandom();
 
-    private UserUtils() {
-    }
+@UtilityClass
+public class UserUtils {
+    private final String PASSWORD_CHARS =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private final SecureRandom RANDOM = new SecureRandom();
 
     /**
      * Generates a unique username in the format: firstName.lastName.
@@ -30,7 +30,7 @@ public final class UserUtils {
      * @param existingUsers list of existing users (nullable or empty)
      * @return unique username
      */
-    public static String generateUsername(String firstName, String lastName, List<? extends User> existingUsers) {
+    public String generateUsername(String firstName, String lastName, List<? extends User> existingUsers) {
         String f = firstName == null ? "" : firstName.trim().toLowerCase();
         String l = lastName == null ? "" : lastName.trim().toLowerCase();
         String base = f + "." + l;
@@ -62,7 +62,7 @@ public final class UserUtils {
      * @param length password length (must be > 0)
      * @return generated password
      */
-    public static String generatePassword(int length) {
+    public String generatePassword(int length) {
         if (length <= 0) {
             throw new IllegalArgumentException("Password length must be positive");
         }
@@ -78,7 +78,7 @@ public final class UserUtils {
      *
      * @return generated password
      */
-    public static String generatePassword() {
+    public String generatePassword() {
         return generatePassword(10);
     }
 }

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -19,10 +20,9 @@ class TrainerServiceTest {
     @BeforeEach
     void setUp() {
         trainerDao = mock(TrainerDao.class);
-        trainerService = new TrainerService();
-        trainerService.setTrainerDao(trainerDao);
+        trainerService = new TrainerService(trainerDao); // ✅ теперь через конструктор
 
-        // save as void
+        // save как void
         doAnswer(invocation -> null).when(trainerDao).save(any(Trainer.class));
     }
 
@@ -36,7 +36,7 @@ class TrainerServiceTest {
 
         Trainer result = trainerService.createTrainer(trainer, Collections.emptyList());
 
-        assertNotNull(result.getId());
+        assertNotNull(result.getId()); // UUID
         assertEquals("john.smith", result.getUsername());
         assertNotNull(result.getPassword());
         assertTrue(result.isActive());
@@ -46,10 +46,16 @@ class TrainerServiceTest {
 
     @Test
     void findById_returnsTrainer() {
-        Trainer trainer = Trainer.builder().id("123").firstName("Anna").lastName("Lee").build();
-        when(trainerDao.findById("123")).thenReturn(Optional.of(trainer));
+        UUID id = UUID.randomUUID(); // ✅ UUID вместо строки
+        Trainer trainer = Trainer.builder()
+                .id(id)
+                .firstName("Anna")
+                .lastName("Lee")
+                .build();
 
-        Optional<Trainer> result = trainerService.findById("123");
+        when(trainerDao.findById(id)).thenReturn(Optional.of(trainer));
+
+        Optional<Trainer> result = trainerService.findById(id);
 
         assertTrue(result.isPresent());
         assertEquals("Anna", result.get().getFirstName());
@@ -57,13 +63,18 @@ class TrainerServiceTest {
 
     @Test
     void updateTrainer_callsDaoSave() {
-        Trainer trainer = Trainer.builder().id("t1").firstName("John").lastName("Smith").build();
-        when(trainerDao.findById("t1")).thenReturn(Optional.of(trainer));
+        UUID id = UUID.randomUUID();
+        Trainer trainer = Trainer.builder()
+                .id(id)
+                .firstName("John")
+                .lastName("Smith")
+                .build();
+
+        when(trainerDao.findById(id)).thenReturn(Optional.of(trainer));
 
         Trainer updated = trainerService.update(trainer);
 
         verify(trainerDao).save(trainer);
         assertEquals("John", updated.getFirstName());
     }
-
 }

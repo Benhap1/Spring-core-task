@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,12 +17,14 @@ class LoggingAspectTest {
     void aspectLogsMethodCall() {
         // given: TrainerService proxied with ServiceLoggingAspect
         TrainerService target = Mockito.mock(TrainerService.class);
-        Mockito.when(target.listAll()).thenReturn(List.of(Trainer.builder()
-                .id("t1")
-                .firstName("John")
-                .lastName("Smith")
-                .specialization("Cardio")
-                .build()));
+        Mockito.when(target.listAll()).thenReturn(List.of(
+                Trainer.builder()
+                        .id(UUID.randomUUID()) // ✅ заменили String → UUID
+                        .firstName("John")
+                        .lastName("Smith")
+                        .specialization("Cardio")
+                        .build()
+        ));
 
         AspectJProxyFactory factory = new AspectJProxyFactory(target);
         factory.addAspect(ServiceLoggingAspect.class);
@@ -36,6 +39,5 @@ class LoggingAspectTest {
 
         // Checking method is called or not
         Mockito.verify(target, Mockito.times(1)).listAll();
-
     }
 }

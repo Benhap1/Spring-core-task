@@ -1,7 +1,6 @@
 //plugins {
 //	id 'java'
-//	id 'org.springframework.boot' version '3.5.5'
-//	id 'io.spring.dependency-management' version '1.1.7'
+//	id 'application'
 //}
 //
 //group = 'com.gymcrm'
@@ -18,81 +17,95 @@
 //}
 //
 //dependencies {
-//	// Spring
-//	implementation 'org.springframework.boot:spring-boot-starter'
-//	implementation 'org.springframework.boot:spring-boot-starter-logging'
+//	implementation 'org.springframework:spring-context:6.2.7'
+//	implementation 'org.springframework:spring-aop:6.1.13'
 //
-//	// JSON (initial-data.json)
-//	implementation 'com.fasterxml.jackson.core:jackson-databind'
+//	implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
 //
-//	// Unit
-//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//	testImplementation 'org.springframework:spring-test:6.1.13'
 //	testImplementation 'org.mockito:mockito-core:5.19.0'
 //	testImplementation 'org.assertj:assertj-core:3.26.0'
 //
-//	// Lombok
+//	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.3'
+//	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.3'
+//
 //	compileOnly 'org.projectlombok:lombok:1.18.40'
 //	annotationProcessor 'org.projectlombok:lombok:1.18.40'
 //	testCompileOnly 'org.projectlombok:lombok:1.18.40'
 //	testAnnotationProcessor 'org.projectlombok:lombok:1.18.40'
 //
-//	// Logging AOP
-//	implementation 'org.springframework.boot:spring-boot-starter-aop'
+//	implementation 'org.aspectj:aspectjweaver:1.9.22.1'
+//	implementation 'org.aspectj:aspectjrt:1.9.22.1'
 //
+//	implementation 'ch.qos.logback:logback-classic:1.5.13'
+//}
+//
+//application {
+//	mainClass = 'com.gymcrm.gym_crm_spring.GymCrmSpringApplication'
 //}
 //
 //test {
 //	useJUnitPlatform()
 //}
-
+//
 
 plugins {
-	id 'java'
-	id 'application'
+    id 'java'
 }
 
 group = 'com.gymcrm'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+ext {
+    springVersion = '6.1.13'
+    jacksonVersion = '2.17.2'
+    junitVersion = '5.11.3'
+    lombokVersion = '1.18.40'
+    mockitoVersion = '5.19.0'
+    assertjVersion = '3.26.0'
+    aspectjVersion = '1.9.22.1'
+    logbackVersion = '1.5.13'
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework:spring-context:6.2.7'
-	implementation 'org.springframework:spring-aop:6.1.13'
+    // Spring Core
+    implementation group: 'org.springframework', name: 'spring-context', version: "${springVersion}"
+    implementation group: 'org.springframework', name: 'spring-aop', version: "${springVersion}"
 
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
+    // Jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${jacksonVersion}"
 
-	testImplementation 'org.springframework:spring-test:6.1.13'
-	testImplementation 'org.mockito:mockito-core:5.19.0'
-	testImplementation 'org.assertj:assertj-core:3.26.0'
+    // AspectJ
+    implementation group: 'org.aspectj', name: 'aspectjweaver', version: "${aspectjVersion}"
+    implementation group: 'org.aspectj', name: 'aspectjrt', version: "${aspectjVersion}"
 
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.3'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.3'
+    // Logging
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: "${logbackVersion}"
 
-	compileOnly 'org.projectlombok:lombok:1.18.40'
-	annotationProcessor 'org.projectlombok:lombok:1.18.40'
-	testCompileOnly 'org.projectlombok:lombok:1.18.40'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.40'
+    // Lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
 
-	implementation 'org.aspectj:aspectjweaver:1.9.22.1'
-	implementation 'org.aspectj:aspectjrt:1.9.22.1'
-
-	implementation 'ch.qos.logback:logback-classic:1.5.13'
-}
-
-application {
-	mainClass = 'com.gymcrm.gym_crm_spring.GymCrmSpringApplication'
+    // Testing
+    testImplementation group: 'org.springframework', name: 'spring-test', version: "${springVersion}"
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: "${mockitoVersion}"
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: "${assertjVersion}"
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${junitVersion}"
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junitVersion}"
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
-

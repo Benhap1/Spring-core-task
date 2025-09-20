@@ -13,10 +13,11 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.lang.NonNull;
+
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.Map;
-
+import java.util.UUID;
 
 @Component
 public class StorageInitializer implements BeanPostProcessor {
@@ -32,64 +33,91 @@ public class StorageInitializer implements BeanPostProcessor {
             return bean;
         }
 
+        if (!("trainerStorage".equals(beanName) || "traineeStorage".equals(beanName) || "trainingStorage".equals(beanName))) {
+            return bean;
+        }
+
         try (InputStream is = initialData.getInputStream()) {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(is);
 
             switch (beanName) {
                 case "trainerStorage" -> {
-                    Map<String, Trainer> storage = (Map<String, Trainer>) bean;
+                    Map<UUID, Trainer> storage = (Map<UUID, Trainer>) bean;
                     JsonNode trainers = root.path("trainers");
-                    for (JsonNode t : trainers) {
-                        Trainer trainer = Trainer.builder()
-                                .id(t.path("id").asText())
-                                .firstName(t.path("firstName").asText())
-                                .lastName(t.path("lastName").asText())
-                                .specialization(t.path("specialization").asText())
-                                .build();
-                        storage.put(trainer.getId(), trainer);
+                    if (trainers.isArray()) {
+                        for (JsonNode t : trainers) {
+                            UUID id = parseUUID(t.path("id").asText(null));
+                            Trainer trainer = Trainer.builder()
+                                    .id(id)
+                                    .firstName(t.path("firstName").asText(null))
+                                    .lastName(t.path("lastName").asText(null))
+                                    .specialization(t.path("specialization").asText(null))
+                                    .build();
+                            storage.put(trainer.getId(), trainer);
+                        }
                     }
                     log.info("Initialized trainerStorage with {} entries", storage.size());
                 }
                 case "traineeStorage" -> {
-                    Map<String, Trainee> storage = (Map<String, Trainee>) bean;
+                    Map<UUID, Trainee> storage = (Map<UUID, Trainee>) bean;
                     JsonNode trainees = root.path("trainees");
-                    for (JsonNode t : trainees) {
-                        Trainee trainee = Trainee.builder()
-                                .id(t.path("id").asText())
-                                .firstName(t.path("firstName").asText())
-                                .lastName(t.path("lastName").asText())
-                                .dateOfBirth(parseLocalDate(t.path("dateOfBirth").asText(null)))
-                                .address(t.path("address").asText(null))
-                                .build();
-                        storage.put(trainee.getId(), trainee);
+                    if (trainees.isArray()) {
+                        for (JsonNode t : trainees) {
+                            UUID id = parseUUID(t.path("id").asText(null));
+                            Trainee trainee = Trainee.builder()
+                                    .id(id)
+                                    .firstName(t.path("firstName").asText(null))
+                                    .lastName(t.path("lastName").asText(null))
+                                    .dateOfBirth(parseLocalDate(t.path("dateOfBirth").asText(null)))
+                                    .address(t.path("address").asText(null))
+                                    .build();
+                            storage.put(trainee.getId(), trainee);
+                        }
                     }
                     log.info("Initialized traineeStorage with {} entries", storage.size());
                 }
                 case "trainingStorage" -> {
-                    Map<String, Training> storage = (Map<String, Training>) bean;
+                    Map<UUID, Training> storage = (Map<UUID, Training>) bean;
                     JsonNode trainings = root.path("trainings");
-                    for (JsonNode tn : trainings) {
-                        Training training = Training.builder()
-                                .id(tn.path("id").asText())
-                                .trainerId(tn.path("trainerId").asText())
-                                .traineeId(tn.path("traineeId").asText())
-                                .trainingName(tn.path("trainingName").asText())
-                                .trainingType(tn.path("trainingType").asText())
-                                .trainingDate(parseLocalDate(tn.path("trainingDate").asText(null)))
-                                .trainingDurationMinutes(tn.path("trainingDurationMinutes").asInt(0))
-                                .build();
-                        storage.put(training.getId(), training);
+                    if (trainings.isArray()) {
+                        for (JsonNode tn : trainings) {
+                            UUID id = parseUUID(tn.path("id").asText(null));
+                            UUID trainerId = parseUUID(tn.path("trainerId").asText(null));
+                            UUID traineeId = parseUUID(tn.path("traineeId").asText(null));
+                            Training training = Training.builder()
+                                    .id(id)
+                                    .trainerId(trainerId)
+                                    .traineeId(traineeId)
+                                    .trainingName(tn.path("trainingName").asText(null))
+                                    .trainingType(tn.path("trainingType").asText(null))
+                                    .trainingDate(parseLocalDate(tn.path("trainingDate").asText(null)))
+                                    .trainingDurationMinutes(tn.path("trainingDurationMinutes").asInt(0))
+                                    .build();
+                            storage.put(training.getId(), training);
+                        }
                     }
                     log.info("Initialized trainingStorage with {} entries", storage.size());
                 }
             }
 
         } catch (Exception e) {
-            log.warn("Failed to initialize storage {} from {}: {}", beanName, initialData, e.getMessage());
+            log.warn("Failed to initialize storage {} from {}: {}", beanName, initialData, e.getMessage(), e);
         }
 
         return bean;
+    }
+
+    private UUID parseUUID(String text) {
+        if (text == null || text.isEmpty()) {
+            return UUID.randomUUID();
+        }
+        try {
+            return UUID.fromString(text);
+        } catch (IllegalArgumentException ex) {
+            log.warn("Invalid UUID '{}' in initial data — generating new one", text);
+            return UUID.randomUUID();
+        }
     }
 
     private LocalDate parseLocalDate(String date) {

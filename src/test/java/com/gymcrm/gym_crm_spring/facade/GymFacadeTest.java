@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,6 +24,10 @@ class GymFacadeTest {
     private TrainerService trainerService;
     private TrainingService trainingService;
     private GymFacade facade;
+
+    private static final UUID TRAINER_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
+    private static final UUID TRAINEE_ID = UUID.fromString("22222222-2222-2222-2222-222222222222");
+    private static final UUID TRAINING_ID = UUID.fromString("33333333-3333-3333-3333-333333333333");
 
     @BeforeEach
     void setUp() {
@@ -83,23 +88,23 @@ class GymFacadeTest {
     void listMethods_returnListsFromServices() {
         // given
         Trainer trainer = Trainer.builder()
-                .id("t1")
+                .id(TRAINER_ID)
                 .firstName("John")
                 .lastName("Smith")
                 .specialization("Yoga")
                 .build();
 
         Trainee trainee = Trainee.builder()
-                .id("u1")
+                .id(TRAINEE_ID)
                 .firstName("Alice")
                 .lastName("Brown")
                 .address("London")
                 .build();
 
         Training training = Training.builder()
-                .id("tr1")
-                .trainerId("t1")
-                .traineeId("u1")
+                .id(TRAINING_ID)
+                .trainerId(TRAINER_ID)
+                .traineeId(TRAINEE_ID)
                 .trainingName("Morning Yoga")
                 .trainingType("Yoga")
                 .trainingDurationMinutes(60)
@@ -121,7 +126,11 @@ class GymFacadeTest {
 
     @Test
     void updateTrainee_delegatesToService() {
-        Trainee trainee = Trainee.builder().id("123").firstName("Alice").lastName("Brown").build();
+        Trainee trainee = Trainee.builder()
+                .id(TRAINEE_ID)
+                .firstName("Alice")
+                .lastName("Brown")
+                .build();
         when(traineeService.update(any())).thenReturn(trainee);
 
         Trainee result = facade.updateTrainee(trainee);
@@ -132,16 +141,20 @@ class GymFacadeTest {
 
     @Test
     void deleteTrainee_delegatesToService() {
-        doNothing().when(traineeService).delete("123");
+        doNothing().when(traineeService).delete(TRAINEE_ID);
 
-        facade.deleteTrainee("123");
+        facade.deleteTrainee(TRAINEE_ID);
 
-        verify(traineeService).delete("123");
+        verify(traineeService).delete(TRAINEE_ID);
     }
 
     @Test
     void updateTrainer_delegatesToService() {
-        Trainer trainer = Trainer.builder().id("t1").firstName("John").lastName("Smith").build();
+        Trainer trainer = Trainer.builder()
+                .id(TRAINER_ID)
+                .firstName("John")
+                .lastName("Smith")
+                .build();
         when(trainerService.update(any())).thenReturn(trainer);
 
         Trainer result = facade.updateTrainer(trainer);
@@ -149,5 +162,4 @@ class GymFacadeTest {
         verify(trainerService).update(trainer);
         assertEquals("John", result.getFirstName());
     }
-
 }

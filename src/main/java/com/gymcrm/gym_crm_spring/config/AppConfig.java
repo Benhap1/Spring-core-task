@@ -5,6 +5,7 @@ import com.gymcrm.gym_crm_spring.domain.Trainer;
 import com.gymcrm.gym_crm_spring.domain.Training;
 import org.springframework.context.annotation.*;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
@@ -13,18 +14,18 @@ import java.util.concurrent.ConcurrentHashMap;
 @PropertySource("classpath:application.properties")
 public class AppConfig {
 
-    @Bean(name = "traineeStorage")
-    public Map<String, Trainee> traineeStorage() {
+    @Bean
+    public Map<UUID, Trainee> traineeStorage() {
         return new ConcurrentHashMap<>();
     }
 
-    @Bean(name = "trainerStorage")
-    public Map<String, Trainer> trainerStorage() {
+    @Bean
+    public Map<UUID, Trainer> trainerStorage() {
         return new ConcurrentHashMap<>();
     }
 
-    @Bean(name = "trainingStorage")
-    public Map<String, Training> trainingStorage() {
+    @Bean
+    public Map<UUID, Training> trainingStorage() {
         return new ConcurrentHashMap<>();
     }
 }
