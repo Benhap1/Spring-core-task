@@ -1,6 +1,9 @@
 package com.gymcrm.gym_crm_spring.domain;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;

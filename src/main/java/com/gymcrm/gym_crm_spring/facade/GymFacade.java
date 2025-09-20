@@ -8,7 +8,6 @@ import com.gymcrm.gym_crm_spring.service.TraineeService;
 import com.gymcrm.gym_crm_spring.service.TrainerService;
 import com.gymcrm.gym_crm_spring.service.TrainingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
