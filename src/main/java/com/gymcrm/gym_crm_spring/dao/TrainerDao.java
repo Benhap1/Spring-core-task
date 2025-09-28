@@ -1,9 +1,8 @@
 package com.gymcrm.gym_crm_spring.dao;
 
 import com.gymcrm.gym_crm_spring.domain.Trainer;
-import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
-
+import jakarta.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,7 +12,7 @@ public class TrainerDao extends AbstractDaoJpa<Trainer> {
 
     public Optional<Trainer> findByUsername(String username) {
         TypedQuery<Trainer> q = getEntityManager()
-                .createQuery("select t from Trainer t where lower(t.username)=:u", Trainer.class)
+                .createQuery("select t from Trainer t where lower(t.user.username) = :u", Trainer.class)
                 .setParameter("u", username.toLowerCase());
         return q.getResultStream().findFirst();
     }

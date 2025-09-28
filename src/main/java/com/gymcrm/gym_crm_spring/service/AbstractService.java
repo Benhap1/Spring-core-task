@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @Transactional
 public abstract class AbstractService<T> {
@@ -16,7 +15,6 @@ public abstract class AbstractService<T> {
     protected AbstractService(AbstractDaoJpa<T> dao) {
         this.dao = dao;
     }
-
 
     public T save(T e) {
         return dao.save(e);
@@ -34,11 +32,6 @@ public abstract class AbstractService<T> {
 
     public void delete(UUID id) {
         dao.delete(id);
-    }
-
-    @Transactional(readOnly = true)
-    public List<T> getByCondition(Predicate<T> predicate) {
-        return dao.getByCondition(predicate);
     }
 }
 

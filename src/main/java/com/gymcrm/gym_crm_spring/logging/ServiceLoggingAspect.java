@@ -17,11 +17,11 @@ import java.util.Arrays;
 public class ServiceLoggingAspect {
 
     /**
-     * Pointcut for all public methods in the service package.
+     * Pointcut for all public methods in the service package and facade.
      */
-    @Pointcut("execution(public * com.gymcrm.gym_crm_spring.service..*(..))")
-    public void serviceMethods() {
-    }
+    @Pointcut("execution(public * com.gymcrm.gym_crm_spring.service..*(..)) || execution(public * com.gymcrm.gym_crm_spring.facade..*(..))")
+    public void serviceMethods() {}
+
 
     /**
      * Logs method call with arguments.

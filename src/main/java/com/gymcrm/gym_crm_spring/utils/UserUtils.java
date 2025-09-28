@@ -2,6 +2,7 @@ package com.gymcrm.gym_crm_spring.utils;
 
 import com.gymcrm.gym_crm_spring.domain.User;
 import lombok.experimental.UtilityClass;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.security.SecureRandom;
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import java.util.Set;
 public class UserUtils {
     private final String PASSWORD_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private final SecureRandom RANDOM = new SecureRandom();
+    private final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
     public String generateUsername(String firstName, String lastName, List<? extends User> existingUsers) {
         String f = firstName == null ? "" : firstName.trim().toLowerCase();
@@ -37,4 +39,8 @@ public class UserUtils {
     }
 
     public String generatePassword() { return generatePassword(10); }
+
+    public String encodePassword(String rawPassword) {
+        return ENCODER.encode(rawPassword);
+    }
 }

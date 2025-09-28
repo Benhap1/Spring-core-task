@@ -11,7 +11,6 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @Slf4j
 public abstract class AbstractDaoJpa<T> {
@@ -49,9 +48,5 @@ public abstract class AbstractDaoJpa<T> {
             entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
             log.debug("Deleted {} id={}", clazz.getSimpleName(), id);
         });
-    }
-
-    public List<T> getByCondition(Predicate<T> predicate) {
-        return findAll().stream().filter(predicate).toList();
     }
 }

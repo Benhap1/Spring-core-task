@@ -24,6 +24,7 @@ ext {
     logbackVersion = '1.5.13'
     jakartaPersistenceVersion = '3.2.0'
     h2Version = '2.4.240'
+    springSecurityCryptoVersion = '6.5.5'
 
 }
 
@@ -56,6 +57,9 @@ dependencies {
 
     // Logging
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: "${logbackVersion}"
+
+    // Spring Security Crypto (для BCryptPasswordEncoder)
+    implementation "org.springframework.security:spring-security-crypto:${springSecurityCryptoVersion}"
 
     // Lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"

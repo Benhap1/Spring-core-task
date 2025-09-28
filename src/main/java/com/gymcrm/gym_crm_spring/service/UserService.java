@@ -9,15 +9,15 @@ import java.util.Optional;
 
 @Service
 public class UserService extends AbstractService<User> {
-    private final UserDao userDao;
+    private final UserDao dao;
 
-    public UserService(UserDao userDao) {
-        super(userDao);
-        this.userDao = userDao;
+    public UserService(UserDao dao) {
+        super(dao);
+        this.dao = dao;
     }
 
     @Transactional(readOnly = true)
     public Optional<User> findByUsername(String username) {
-        return userDao.findByUsername(username);
+        return dao.findByUsername(username);
     }
 }

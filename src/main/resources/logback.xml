@@ -17,7 +17,7 @@
     <logger name="com.gymcrm.gym_crm_spring" level="INFO"/>
 
     <!-- Root logger -->
-    <root level="WARN">
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>
