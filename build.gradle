@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group = 'com.gymcrm'
@@ -13,13 +14,17 @@ java {
 
 ext {
     springVersion = '6.2.7'
-    jacksonVersion = '2.17.2'
+    hibernateVersion = '7.1.1.Final'
     junitVersion = '5.11.3'
     lombokVersion = '1.18.40'
     mockitoVersion = '5.19.0'
     assertjVersion = '3.26.0'
     aspectjVersion = '1.9.22.1'
+    flywayVersion = '11.13.2'
     logbackVersion = '1.5.13'
+    jakartaPersistenceVersion = '3.2.0'
+    h2Version = '2.4.240'
+
 }
 
 repositories {
@@ -27,12 +32,23 @@ repositories {
 }
 
 dependencies {
-    // Spring Core
-    implementation group: 'org.springframework', name: 'spring-context', version: "${springVersion}"
+
+    // Spring Core + ORM
+    implementation "org.springframework:spring-context:${springVersion}"
+    implementation "org.springframework:spring-tx:${springVersion}"
+    implementation "org.springframework:spring-orm:${springVersion}"
+    implementation "org.springframework:spring-jdbc:${springVersion}"
     implementation group: 'org.springframework', name: 'spring-aop', version: "${springVersion}"
 
-    // Jackson
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${jacksonVersion}"
+    // Hibernate + JPA
+    implementation group: 'org.hibernate', name: 'hibernate-core', version: hibernateVersion
+    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: jakartaPersistenceVersion
+
+    // H2 DB
+    implementation group: 'com.h2database', name: 'h2', version: h2Version
+
+    // Flyway
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
 
     // AspectJ
     implementation group: 'org.aspectj', name: 'aspectjweaver', version: "${aspectjVersion}"
@@ -54,6 +70,11 @@ dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${junitVersion}"
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junitVersion}"
 }
+
+application {
+    mainClass = "com.gymcrm.gym_crm_spring.GymCrmSpringApplication"
+}
+
 
 test {
     useJUnitPlatform()

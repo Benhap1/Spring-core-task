@@ -1,0 +1,21 @@
+package com.gymcrm.gym_crm_spring.service;
+
+import com.gymcrm.gym_crm_spring.dao.TrainingTypeDao;
+import com.gymcrm.gym_crm_spring.domain.TrainingType;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class TrainingTypeService extends AbstractService<TrainingType> {
+    private final TrainingTypeDao dao;
+
+    public TrainingTypeService(TrainingTypeDao dao) {
+        super(dao);
+        this.dao = dao;
+    }
+
+    public Optional<TrainingType> findByName(String name) {
+        return dao.findByName(name);
+    }
+}

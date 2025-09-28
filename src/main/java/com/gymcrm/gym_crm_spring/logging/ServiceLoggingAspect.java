@@ -1,24 +1,27 @@
 package com.gymcrm.gym_crm_spring.logging;
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 
 @Aspect
 @Component
+@Slf4j
 public class ServiceLoggingAspect {
-
-    private static final Logger log = LoggerFactory.getLogger(ServiceLoggingAspect.class);
 
     /**
      * Pointcut for all public methods in the service package.
      */
     @Pointcut("execution(public * com.gymcrm.gym_crm_spring.service..*(..))")
-    public void serviceMethods() {}
+    public void serviceMethods() {
+    }
 
     /**
      * Logs method call with arguments.

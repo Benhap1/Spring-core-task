@@ -1,31 +1,27 @@
 package com.gymcrm.gym_crm_spring.dao;
 
 import com.gymcrm.gym_crm_spring.domain.Trainer;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
-import java.util.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-@RequiredArgsConstructor
-public class TrainerDao {
-    private static final Logger log = LoggerFactory.getLogger(TrainerDao.class);
+public class TrainerDao extends AbstractDaoJpa<Trainer> {
 
-    @Qualifier("trainerStorage")
-    private final Map<UUID, Trainer> trainerStorage;
-
-    public void save(Trainer trainer) {
-        trainerStorage.put(trainer.getId(), trainer);
-        log.debug("Saved trainer id={} name={} {}", trainer.getId(), trainer.getFirstName(), trainer.getLastName());
+    public Optional<Trainer> findByUsername(String username) {
+        TypedQuery<Trainer> q = getEntityManager()
+                .createQuery("select t from Trainer t where lower(t.username)=:u", Trainer.class)
+                .setParameter("u", username.toLowerCase());
+        return q.getResultStream().findFirst();
     }
 
-    public Optional<Trainer> findById(UUID id) {
-        return Optional.ofNullable(trainerStorage.get(id));
-    }
-
-    public List<Trainer> findAll() {
-        return new ArrayList<>(trainerStorage.values());
+    public List<Trainer> findNotAssignedToTrainee(UUID traineeId) {
+        TypedQuery<Trainer> q = getEntityManager().createQuery(
+                "select tr from Trainer tr where :tid not in (select ta.id from tr.assignedTrainees ta)", Trainer.class);
+        q.setParameter("tid", traineeId);
+        return q.getResultList();
     }
 }

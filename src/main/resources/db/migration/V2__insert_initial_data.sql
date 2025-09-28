@@ -1,0 +1,5 @@
+INSERT INTO "TRAINING_TYPE" ("ID", "TRAINING_TYPE_NAME")
+VALUES
+    (RANDOM_UUID(), 'Yoga'),
+    (RANDOM_UUID(), 'Crossfit'),
+    (RANDOM_UUID(), 'Boxing');
