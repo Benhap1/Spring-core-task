@@ -1,9 +1,16 @@
 package com.gymcrm.gym_crm_spring.utils;
 
 import com.gymcrm.gym_crm_spring.domain.Trainer;
+import com.gymcrm.gym_crm_spring.domain.User;
 import org.junit.jupiter.api.Test;
+
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 class UserUtilsTest {
 
@@ -15,9 +22,18 @@ class UserUtilsTest {
 
     @Test
     void generateUsername_withCollision_addsNumber() {
-        Trainer existing = Trainer.builder().firstName("John").lastName("Smith").username("John.Smith").build();
 
-        String username = UserUtils.generateUsername("John", "Smith", List.of(existing));
+        User existingUser = User.builder()
+                .firstName("John")
+                .lastName("Smith")
+                .username("john.smith")
+                .build();
+
+        Trainer existing = Trainer.builder()
+                .user(existingUser)
+                .build();
+
+        String username = UserUtils.generateUsername("John", "Smith", List.of(existing.getUser()));
 
         assertTrue(username.startsWith("john.smith"));
         assertNotEquals("john.smith", username);

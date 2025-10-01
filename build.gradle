@@ -25,7 +25,7 @@ ext {
     jakartaPersistenceVersion = '3.2.0'
     h2Version = '2.4.240'
     springSecurityCryptoVersion = '6.5.5'
-
+    jakartaAnnotationVersion = '3.0.0'
 }
 
 repositories {
@@ -35,21 +35,24 @@ repositories {
 dependencies {
 
     // Spring Core + ORM
-    implementation "org.springframework:spring-context:${springVersion}"
-    implementation "org.springframework:spring-tx:${springVersion}"
-    implementation "org.springframework:spring-orm:${springVersion}"
-    implementation "org.springframework:spring-jdbc:${springVersion}"
+    implementation group: 'org.springframework', name: 'spring-context', version: "${springVersion}"
+    implementation group: 'org.springframework', name: 'spring-tx', version: "${springVersion}"
+    implementation group: 'org.springframework', name: 'spring-orm', version: "${springVersion}"
+    implementation group: 'org.springframework', name: 'spring-jdbc', version: "${springVersion}"
     implementation group: 'org.springframework', name: 'spring-aop', version: "${springVersion}"
 
     // Hibernate + JPA
-    implementation group: 'org.hibernate', name: 'hibernate-core', version: hibernateVersion
-    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: jakartaPersistenceVersion
+    implementation group: 'org.hibernate', name: 'hibernate-core', version: "${hibernateVersion}"
+    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: "${jakartaPersistenceVersion}"
+
+    // Jakarta
+    implementation group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: "${jakartaAnnotationVersion}"
 
     // H2 DB
-    implementation group: 'com.h2database', name: 'h2', version: h2Version
+    implementation group: 'com.h2database', name: 'h2', version: "${h2Version}"
 
     // Flyway
-    implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: "${flywayVersion}"
 
     // AspectJ
     implementation group: 'org.aspectj', name: 'aspectjweaver', version: "${aspectjVersion}"
@@ -59,7 +62,7 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: "${logbackVersion}"
 
     // Spring Security Crypto (для BCryptPasswordEncoder)
-    implementation "org.springframework.security:spring-security-crypto:${springSecurityCryptoVersion}"
+    implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: "${springSecurityCryptoVersion}"
 
     // Lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
@@ -78,7 +81,6 @@ dependencies {
 application {
     mainClass = "com.gymcrm.gym_crm_spring.GymCrmSpringApplication"
 }
-
 
 test {
     useJUnitPlatform()

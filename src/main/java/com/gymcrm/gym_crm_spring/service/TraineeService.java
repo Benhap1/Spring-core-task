@@ -22,3 +22,4 @@ public class TraineeService extends AbstractService<Trainee> {
     }
 }
 
+

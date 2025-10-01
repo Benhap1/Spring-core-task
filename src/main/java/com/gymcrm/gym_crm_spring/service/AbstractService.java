@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Transactional
+
 public abstract class AbstractService<T> {
 
     protected final AbstractDaoJpa<T> dao;
@@ -16,6 +16,7 @@ public abstract class AbstractService<T> {
         this.dao = dao;
     }
 
+    @Transactional
     public T save(T e) {
         return dao.save(e);
     }
@@ -29,7 +30,7 @@ public abstract class AbstractService<T> {
     public List<T> findAll() {
         return dao.findAll();
     }
-
+    @Transactional
     public void delete(UUID id) {
         dao.delete(id);
     }

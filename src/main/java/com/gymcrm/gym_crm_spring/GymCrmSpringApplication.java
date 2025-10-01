@@ -8,7 +8,6 @@ import com.gymcrm.gym_crm_spring.domain.TrainingType;
 import com.gymcrm.gym_crm_spring.domain.User;
 import com.gymcrm.gym_crm_spring.facade.GymFacade;
 import com.gymcrm.gym_crm_spring.service.TrainingTypeService;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.time.LocalDate;
@@ -18,7 +17,13 @@ import java.util.List;
 public class GymCrmSpringApplication {
 
     public static void main(String[] args) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.getEnvironment().setActiveProfiles("prod");
+        context.register(AppConfig.class);
+        context.refresh();
+
+
         GymFacade facade = context.getBean(GymFacade.class);
         TrainingTypeService trainingTypeService = context.getBean(TrainingTypeService.class);
 
@@ -101,3 +106,5 @@ public class GymCrmSpringApplication {
         facade.deleteTrainee(regT2.entity().getUser().getUsername(), regT2.rawPassword());
     }
 }
+
+
